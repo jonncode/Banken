@@ -9,8 +9,9 @@ namespace Banken
     class Customer
     {
         public string Name { get; set; }
-        public int Balance { get; set; }
+        public decimal Balance { get; set; }
+        public List<decimal> transactions = new List<decimal>();
 
-        public string ShowCustomer { get { return "Name: " + Name + "Saldo: " + Balance; } }
+        public string ShowCustomerBalance { get { return "Name: " + Name + "Saldo: " + Balance; } }
     }
 }

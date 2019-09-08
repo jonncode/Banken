@@ -18,20 +18,31 @@ namespace Banken
                 switch (Choice)
                 {
                     case 1:
-                        Console.WriteLine("Du valde 1");
                         AddCustomer();
+                        pauseProgram();
                         break;
-                    case 2:
+                    case 2: 
+                        ShowCustomers();
                         RemoveCustomer();
+                        pauseProgram();
                         break;
                     case 3:
                         ShowCustomers();
+                        pauseProgram();
                         break;
                     case 4:
+                        ShowCustomers();
+                        ShowBalance();
+                        pauseProgram();
                         break;
                     case 5:
+                        ShowCustomers();
+                        AddBalance();
+                        pauseProgram();
                         break;
                     case 6:
+                        SubtractBalance();
+                        pauseProgram();
                         break;
                     case 7:
                         notDone = false;
@@ -61,36 +72,61 @@ namespace Banken
             Console.Write("Vad är ditt namn? ");
             customer.Name = Console.ReadLine();
             Console.Write("Vad är ditt saldo? ");
-            customer.Balance = int.Parse(Console.ReadLine());
+            var balanceInput = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            customer.Balance = Math.Round(balanceInput, 2);
             bankCustomers.Add(customer);
+            customer.transactions.Add(balanceInput);
             Console.WriteLine("Lade till ny användare!");
-            Console.ReadKey();
-            Console.WriteLine("");
-
-
         }
         static void RemoveCustomer()
         {
-            int i = 1;
-            foreach (var customer in bankCustomers)
-            {
-                Console.WriteLine(i + ": Namn " + customer.Name + " Saldo " + customer.Balance);
-                i++;
-            }
             Console.Write("Vem vill du ta bort? ");
             int Choice = int.Parse(Console.ReadLine());
             bankCustomers.Remove(bankCustomers[Choice - 1]);
             Console.WriteLine("Tog bort användare!");
-            Console.ReadKey();
-            Console.WriteLine("");
         }
         static void ShowCustomers()
         {
-
-            foreach(var customer in bankCustomers)
+            int i = 1;
+            foreach (var customer in bankCustomers)
             {
-                Console.WriteLine("Namn " + customer.Name + " Saldo " + customer.Balance);
+                Console.WriteLine("[{0}] Namn: {1}", i, customer.Name);
+                i++;
             }
+        }
+        static void ShowBalance()
+        {
+            Console.Write("Vem vill du visa? ");
+            int chosenCustomer = int.Parse(Console.ReadLine());
+            Console.WriteLine(bankCustomers[chosenCustomer - 1].ShowCustomerBalance);
+        }
+        static void AddBalance()
+        {
+
+            Console.Write("Vem vill du göra en insättning på? ");
+            int chosenCustomer = int.Parse(Console.ReadLine());
+            Console.Write("Hur mycket vill du göra en insättning på? ");
+            var addedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            bankCustomers[chosenCustomer - 1].transactions.Add(addedBalance);
+            bankCustomers[chosenCustomer - 1].Balance += addedBalance;
+        }
+        static void SubtractBalance()
+        {
+            Console.Write("Vem vill du göra ett uttag på? ");
+            int chosenCustomer = int.Parse(Console.ReadLine());
+            Console.Write("Hur mycket vill du göra ett uttag på? ");
+            var subtractedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            bankCustomers[chosenCustomer - 1].transactions.Add(subtractedBalance * -1);
+            bankCustomers[chosenCustomer - 1].Balance += subtractedBalance * -1;
+            foreach (var customer in bankCustomers[chosenCustomer - 1].transactions)
+            {
+                Console.WriteLine(customer);
+            }
+        }
+        static void pauseProgram()
+        {
+            Console.WriteLine("");
+            Console.WriteLine("Klicka på valfri knapp för att fortsätta");
             Console.ReadKey();
             Console.WriteLine("");
         }
