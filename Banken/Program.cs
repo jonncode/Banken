@@ -8,7 +8,11 @@ namespace Banken
 {
     class Program
     {
-        static List<Customer> bankCustomers = new List<Customer>();
+        static List<Customer> bankCustomers = new List<Customer>(); // Initialize list to store all customers
+        /// <summary>
+        /// Execute functions based on the choice chosen in SelectMenuItem
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             bool notDone = true;
@@ -50,6 +54,10 @@ namespace Banken
                 }
             }
         }
+        /// <summary>
+        /// Run welcome text and return input choice from user into main
+        /// </summary>
+        /// <returns></returns>
         static public int SelectMenuItem()
         {
             Console.WriteLine("Välkommen till banken!");
@@ -67,17 +75,24 @@ namespace Banken
             Console.Write("Skriv in ditt val: ");
             return int.Parse(Console.ReadLine());
         }
+        /// <summary>
+        /// Create new customer object and fill class attributes name and balance, add first transaction (starting balance) to list.
+        /// Add object into list with customers.
+        /// </summary>
         static void AddCustomer() {
-            Customer customer = new Customer();
+            Customer customer = new Customer(); // Instanciate object customer with the constructor Customer();
             Console.Write("Vad är ditt namn? ");
             customer.Name = Console.ReadLine();
             Console.Write("Vad är ditt saldo? ");
-            var balanceInput = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
-            customer.Balance = Math.Round(balanceInput, 2);
+            var balanceInput = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Use datatype decimal for more accurate calculations regarding money, change culture to use "." instead of ","
+            customer.Balance = balanceInput;
             bankCustomers.Add(customer);
             customer.transactions.Add(balanceInput);
             Console.WriteLine("Lade till ny användare!");
         }
+        /// <summary>
+        /// Remove customer from list with customers.
+        /// </summary>
         static void RemoveCustomer()
         {
             Console.Write("Vem vill du ta bort? ");
@@ -85,6 +100,9 @@ namespace Banken
             bankCustomers.Remove(bankCustomers[Choice - 1]);
             Console.WriteLine("Tog bort användare!");
         }
+        /// <summary>
+        /// Use for-loop through list and print all customers using string formatting.
+        /// </summary>
         static void ShowCustomers()
         {
             int i = 1;
@@ -94,28 +112,40 @@ namespace Banken
                 i++;
             }
         }
+        /// <summary>
+        /// Use user input to select customer, print said customer's Balance attribute
+        /// </summary>
         static void ShowBalance()
         {
             Console.Write("Vem vill du visa? ");
             int chosenCustomer = int.Parse(Console.ReadLine());
             Console.WriteLine(bankCustomers[chosenCustomer - 1].ShowCustomerBalance);
         }
+        /// <summary>
+        /// Use user input to select customer, convert second input from string to decimal and add into customer's Balance attribute.
+        /// Add transaction to transaction array
+        /// </summary>
         static void AddBalance()
         {
 
             Console.Write("Vem vill du göra en insättning på? ");
             int chosenCustomer = int.Parse(Console.ReadLine());
             Console.Write("Hur mycket vill du göra en insättning på? ");
-            var addedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            var addedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Change culture to use "." instead of ","
             bankCustomers[chosenCustomer - 1].transactions.Add(addedBalance);
             bankCustomers[chosenCustomer - 1].Balance += addedBalance;
         }
+        /// <summary>
+        /// Use user input to select customer, convert second input from string to decimal.
+        /// Multiply second input by -1 to easier store in transactions array.
+        /// Add said input into customer's Balance attribute and said transaction into transaction array.
+        /// </summary>
         static void SubtractBalance()
         {
             Console.Write("Vem vill du göra ett uttag på? ");
             int chosenCustomer = int.Parse(Console.ReadLine());
             Console.Write("Hur mycket vill du göra ett uttag på? ");
-            var subtractedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture);
+            var subtractedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Change culture to use "." instead of ","
             bankCustomers[chosenCustomer - 1].transactions.Add(subtractedBalance * -1);
             bankCustomers[chosenCustomer - 1].Balance += subtractedBalance * -1;
             foreach (var customer in bankCustomers[chosenCustomer - 1].transactions)
