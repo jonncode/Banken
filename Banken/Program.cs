@@ -8,14 +8,15 @@ namespace Banken
 {
     class Program
     {
-        static List<Customer> bankCustomers = new List<Customer>(); // Initialize list to store all customers
+        static List<Customer> bankCustomers = new List<Customer>(); // Initialize list to store all customers using constructor List<>()
         /// <summary>
-        /// Execute functions based on the choice chosen in SelectMenuItem
+        /// Execute functions based on the choice chosen in SelectMenuItem using switch-case
+        /// Loop after case: is done, until user exits by changing bool value of notDone
         /// </summary>
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            bool notDone = true;
+            bool notDone = true; //
             while (notDone == true)
             {
                 int Choice = SelectMenuItem();
@@ -76,8 +77,8 @@ namespace Banken
             return int.Parse(Console.ReadLine());
         }
         /// <summary>
-        /// Create new customer object and fill class attributes name and balance, add first transaction (starting balance) to list.
-        /// Add object into list with customers.
+        /// Create new customer instance and fill class attributes name and balance, add first transaction (starting balance) to list.
+        /// Add instanc into list withholding all customer objects.
         /// </summary>
         static void AddCustomer() {
             Customer customer = new Customer(); // Instanciate object customer with the constructor Customer();
@@ -153,6 +154,9 @@ namespace Banken
                 Console.WriteLine(customer);
             }
         }
+        /// <summary>
+        /// Simple pause between end of function and continuing notDone while-loop.
+        /// </summary>
         static void pauseProgram()
         {
             Console.WriteLine("");
