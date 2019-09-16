@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace Banken
 {
@@ -90,6 +91,8 @@ namespace Banken
             bankCustomers.Add(customer);
             customer.transactions.Add(balanceInput);
             Console.WriteLine("Lade till ny användare!");
+            string json = JsonConvert.SerializeObject(customer);
+            System.IO.File.AppendAllText(@"C:\Users\jonaerik\Desktop\Data.txt", json);
         }
         /// <summary>
         /// Remove customer from list with customers.
