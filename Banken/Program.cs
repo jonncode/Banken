@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Banken
 {
@@ -17,7 +18,15 @@ namespace Banken
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            string path = @"C:\Users\Jonathan\Desktop\data.txt"; //
+            if (!File.Exists(path)) //If file does not exist
+            {
+                File.Create(@"Desktop\data.txt"); //Create file in Desktop folder
+            }
+            string jsonText = File.ReadAllText(path); //Read whole file in json format
+            bankCustomers = JsonConvert.DeserializeObject<List<Customer>>(jsonText); //Deserialize json into c# list format
             bool notDone = true; //
+
             while (notDone == true)
             {
                 int Choice = SelectMenuItem();
@@ -27,7 +36,7 @@ namespace Banken
                         AddCustomer();
                         pauseProgram();
                         break;
-                    case 2: 
+                    case 2:
                         ShowCustomers();
                         RemoveCustomer();
                         pauseProgram();
@@ -51,6 +60,8 @@ namespace Banken
                         pauseProgram();
                         break;
                     case 7:
+                        string json = JsonConvert.SerializeObject(bankCustomers); //Convert list to json format
+                        File.WriteAllText(path, json); //Store list into into .txt file
                         notDone = false;
                         break;
                 }
@@ -79,20 +90,18 @@ namespace Banken
         }
         /// <summary>
         /// Create new customer instance and fill class attributes name and balance, add first transaction (starting balance) to list.
-        /// Add instanc into list withholding all customer objects.
+        /// Add instance into list that withholds all customer objects.
         /// </summary>
-        static void AddCustomer() {
+        static void AddCustomer()
+        {
             Customer customer = new Customer(); // Instanciate object customer with the constructor Customer();
             Console.Write("Vad är ditt namn? ");
             customer.Name = Console.ReadLine();
             Console.Write("Vad är ditt saldo? ");
             var balanceInput = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Use datatype decimal for more accurate calculations regarding money, change culture to use "." instead of ","
-            customer.Balance = balanceInput;
-            bankCustomers.Add(customer);
             customer.transactions.Add(balanceInput);
+            bankCustomers.Add(customer);
             Console.WriteLine("Lade till ny användare!");
-            string json = JsonConvert.SerializeObject(customer);
-            System.IO.File.AppendAllText(@"C:\Users\jonaerik\Desktop\Data.txt", json);
         }
         /// <summary>
         /// Remove customer from list with customers.
@@ -137,7 +146,6 @@ namespace Banken
             Console.Write("Hur mycket vill du göra en insättning på? ");
             var addedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Change culture to use "." instead of ","
             bankCustomers[chosenCustomer - 1].transactions.Add(addedBalance);
-            bankCustomers[chosenCustomer - 1].Balance += addedBalance;
         }
         /// <summary>
         /// Use user input to select customer, convert second input from string to decimal.
@@ -151,7 +159,6 @@ namespace Banken
             Console.Write("Hur mycket vill du göra ett uttag på? ");
             var subtractedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Change culture to use "." instead of ","
             bankCustomers[chosenCustomer - 1].transactions.Add(subtractedBalance * -1);
-            bankCustomers[chosenCustomer - 1].Balance += subtractedBalance * -1;
             foreach (var customer in bankCustomers[chosenCustomer - 1].transactions)
             {
                 Console.WriteLine(customer);
@@ -167,6 +174,6 @@ namespace Banken
             Console.ReadKey();
             Console.WriteLine("");
         }
-            
+
     }
 }
