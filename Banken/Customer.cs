@@ -9,9 +9,9 @@ namespace Banken
     class Customer
     {
         public string Name { get; set; }
-        public List<decimal> transactions = new List<decimal>();
+        public List<decimal> Transactions = new List<decimal>();
 
-        public decimal Balance { get { return transactions.Sum(); } }
-        public string ShowCustomerBalance { get { return "Name: " + Name + " Saldo: " + Math.Round(Balance, 2); } }
+        public decimal Balance { get { return Transactions.Sum(); } }
+        public string ShowCustomerBalance { get { return "Name: " + Name + ", Saldo: " + Math.Round(Balance, 2) + " SEK"; } }
     }
 }

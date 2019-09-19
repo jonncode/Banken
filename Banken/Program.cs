@@ -18,19 +18,18 @@ namespace Banken
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            string path = @"C:\Users\Jonathan\Desktop\data.txt"; //
-            if (!File.Exists(path)) //If file does not exist
+            string filename = @"data.txt"; //Save file into project root directory
+            if (File.Exists(filename) == false) //If file does not exist
             {
-                File.Create(@"Desktop\data.txt"); //Create file in Desktop folder
+                File.Create(filename); //Create file in Desktop folder
             }
-            string jsonText = File.ReadAllText(path); //Read whole file in json format
+            string jsonText = File.ReadAllText(filename); //Read whole file in json format
             bankCustomers = JsonConvert.DeserializeObject<List<Customer>>(jsonText); //Deserialize json into c# list format
-            bool notDone = true; //
-
-            while (notDone == true)
+            bool notDone = true;
+            while (notDone == true) 
             {
                 int Choice = SelectMenuItem();
-                switch (Choice)
+                switch (Choice) //Choose from range of options with input
                 {
                     case 1:
                         AddCustomer();
@@ -61,8 +60,13 @@ namespace Banken
                         break;
                     case 7:
                         string json = JsonConvert.SerializeObject(bankCustomers); //Convert list to json format
-                        File.WriteAllText(path, json); //Store list into into .txt file
+                        File.WriteAllText(filename, json); //Store list into into .txt file
                         notDone = false;
+                        break;
+                    default:
+                        Console.WriteLine("");
+                        Console.WriteLine("Felaktivt svar, försök igen!");
+                        pauseProgram();
                         break;
                 }
             }
@@ -98,8 +102,8 @@ namespace Banken
             Console.Write("Vad är ditt namn? ");
             customer.Name = Console.ReadLine();
             Console.Write("Vad är ditt saldo? ");
-            var balanceInput = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Use datatype decimal for more accurate calculations regarding money, change culture to use "." instead of ","
-            customer.transactions.Add(balanceInput);
+            var balanceInput = decimal.Parse(Console.ReadLine()); // Use datatype decimal for more accurate calculations regarding money, change culture to use "." instead of ","
+            customer.Transactions.Add(balanceInput);
             bankCustomers.Add(customer);
             Console.WriteLine("Lade till ny användare!");
         }
@@ -144,12 +148,12 @@ namespace Banken
             Console.Write("Vem vill du göra en insättning på? ");
             int chosenCustomer = int.Parse(Console.ReadLine());
             Console.Write("Hur mycket vill du göra en insättning på? ");
-            var addedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Change culture to use "." instead of ","
-            bankCustomers[chosenCustomer - 1].transactions.Add(addedBalance);
+            var addedBalance = decimal.Parse(Console.ReadLine()); // Change culture to use "." instead of ","
+            bankCustomers[chosenCustomer - 1].Transactions.Add(addedBalance);
         }
         /// <summary>
         /// Use user input to select customer, convert second input from string to decimal.
-        /// Multiply second input by -1 to easier store in transactions array.
+        /// Multiply second input by -1 to easier store in Transactions array.
         /// Add said input into customer's Balance attribute and said transaction into transaction array.
         /// </summary>
         static void SubtractBalance()
@@ -157,12 +161,8 @@ namespace Banken
             Console.Write("Vem vill du göra ett uttag på? ");
             int chosenCustomer = int.Parse(Console.ReadLine());
             Console.Write("Hur mycket vill du göra ett uttag på? ");
-            var subtractedBalance = decimal.Parse(Console.ReadLine(), System.Globalization.CultureInfo.InvariantCulture); // Change culture to use "." instead of ","
-            bankCustomers[chosenCustomer - 1].transactions.Add(subtractedBalance * -1);
-            foreach (var customer in bankCustomers[chosenCustomer - 1].transactions)
-            {
-                Console.WriteLine(customer);
-            }
+            var subtractedBalance = decimal.Parse(Console.ReadLine()); // Change culture to use "." instead of ","
+            bankCustomers[chosenCustomer - 1].Transactions.Add(subtractedBalance * -1);
         }
         /// <summary>
         /// Simple pause between end of function and continuing notDone while-loop.
