@@ -10,7 +10,7 @@ namespace Banken
 {
     class Program
     {
-        static List<Customer> bankCustomers = new List<Customer>(); // Initialize list to store all customers using constructor List<>()
+        static List<Customer> bankCustomers = new List<Customer>(); // Initialize list to store all customer objects using constructor List<>()
         /// <summary>
         /// Execute functions based on the choice chosen in SelectMenuItem using switch-case
         /// Loop after case: is done, until user exits by changing bool value of notDone
@@ -21,15 +21,15 @@ namespace Banken
             string filename = @"data.txt"; //Save file into project root directory
             if (File.Exists(filename) == false) //If file does not exist
             {
-                File.Create(filename); //Create file in Desktop folder
+                File.Create(filename); //Create file in selected directory
             }
-            string jsonText = File.ReadAllText(filename); //Read whole file in json format
+            string jsonText = File.ReadAllText(filename); //Read whole file and save into string var
             bankCustomers = JsonConvert.DeserializeObject<List<Customer>>(jsonText); //Deserialize json into c# list format
             bool notDone = true;
             while (notDone == true) 
             {
-                int Choice = SelectMenuItem();
-                switch (Choice) //Choose from range of options with input
+                int selectedMenuInput = SelectMenuItem();
+                switch (selectedMenuInput) //Choose from range of options with input "selectedMenuInput"
                 {
                     case 1:
                         AddCustomer();
@@ -98,17 +98,17 @@ namespace Banken
         /// </summary>
         static void AddCustomer()
         {
-            Customer customer = new Customer(); // Instanciate object customer with the constructor Customer();
+            Customer customer = new Customer(); // Instanciate instance using class Customer with constructor Customer();
             Console.Write("Vad är ditt namn? ");
             customer.Name = Console.ReadLine();
             Console.Write("Vad är ditt saldo? ");
-            var balanceInput = decimal.Parse(Console.ReadLine()); // Use datatype decimal for more accurate calculations regarding money, change culture to use "." instead of ","
+            var balanceInput = decimal.Parse(Console.ReadLine()); // Use datatype decimal for more accurate calculations regarding money
             customer.Transactions.Add(balanceInput);
             bankCustomers.Add(customer);
             Console.WriteLine("Lade till ny användare!");
         }
         /// <summary>
-        /// Remove customer from list with customers.
+        /// Remove customer from list with customers using input. 
         /// </summary>
         static void RemoveCustomer()
         {
@@ -139,8 +139,9 @@ namespace Banken
             Console.WriteLine(bankCustomers[chosenCustomer - 1].ShowCustomerBalance);
         }
         /// <summary>
-        /// Use user input to select customer, convert second input from string to decimal and add into customer's Balance attribute.
-        /// Add transaction to transaction array
+        /// Use user input to select customer, convert second input from string to decimal.
+        /// Add decimal input into instance's Transaction list attribute.
+        ///
         /// </summary>
         static void AddBalance()
         {
@@ -148,20 +149,20 @@ namespace Banken
             Console.Write("Vem vill du göra en insättning på? ");
             int chosenCustomer = int.Parse(Console.ReadLine());
             Console.Write("Hur mycket vill du göra en insättning på? ");
-            var addedBalance = decimal.Parse(Console.ReadLine()); // Change culture to use "." instead of ","
+            var addedBalance = decimal.Parse(Console.ReadLine()); // parse string into decimal datatype
             bankCustomers[chosenCustomer - 1].Transactions.Add(addedBalance);
         }
         /// <summary>
         /// Use user input to select customer, convert second input from string to decimal.
-        /// Multiply second input by -1 to easier store in Transactions array.
-        /// Add said input into customer's Balance attribute and said transaction into transaction array.
+        /// Multiply second input by -1 to easier store in Transactions list.
+        /// Add decimal input into instance's Transaction list attribute.
         /// </summary>
         static void SubtractBalance()
         {
             Console.Write("Vem vill du göra ett uttag på? ");
             int chosenCustomer = int.Parse(Console.ReadLine());
             Console.Write("Hur mycket vill du göra ett uttag på? ");
-            var subtractedBalance = decimal.Parse(Console.ReadLine()); // Change culture to use "." instead of ","
+            var subtractedBalance = decimal.Parse(Console.ReadLine()); // parse string into decimal datatype
             bankCustomers[chosenCustomer - 1].Transactions.Add(subtractedBalance * -1);
         }
         /// <summary>
