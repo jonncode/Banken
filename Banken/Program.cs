@@ -18,56 +18,83 @@ namespace Banken
         /// <param name="args"></param>
         static void Main(string[] args)
         {
+            string dirname = @"datadir2\";
             string filename = @"data.txt"; //Save file into project root directory
-            if (File.Exists(filename) == false) //If file does not exist
+            string dirfile = dirname + filename;
+            try
             {
-                File.Create(filename); //Create file in selected directory
+                if (File.Exists(dirfile)) //If file does not exist
+                {
+                    string jsonText = File.ReadAllText(dirfile); //Read whole file and save into string var
+                    bankCustomers = JsonConvert.DeserializeObject<List<Customer>>(jsonText); //Deserialize json into c# list format
+                }
             }
-            string jsonText = File.ReadAllText(filename); //Read whole file and save into string var
-            bankCustomers = JsonConvert.DeserializeObject<List<Customer>>(jsonText); //Deserialize json into c# list format
+            catch(Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                Console.WriteLine("");
+                pauseProgram();
+            }
             bool notDone = true;
             while (notDone == true) 
             {
-                int selectedMenuInput = SelectMenuItem();
-                switch (selectedMenuInput) //Choose from range of options with input "selectedMenuInput"
+                try
                 {
-                    case 1:
-                        AddCustomer();
-                        pauseProgram();
-                        break;
-                    case 2:
-                        ShowCustomers();
-                        RemoveCustomer();
-                        pauseProgram();
-                        break;
-                    case 3:
-                        ShowCustomers();
-                        pauseProgram();
-                        break;
-                    case 4:
-                        ShowCustomers();
-                        ShowBalance();
-                        pauseProgram();
-                        break;
-                    case 5:
-                        ShowCustomers();
-                        AddBalance();
-                        pauseProgram();
-                        break;
-                    case 6:
-                        SubtractBalance();
-                        pauseProgram();
-                        break;
-                    case 7:
-                        string json = JsonConvert.SerializeObject(bankCustomers); //Convert list to json format
-                        File.WriteAllText(filename, json); //Store list into into .txt file
-                        notDone = false;
-                        break;
-                    default:
-                        Console.WriteLine("");
-                        Console.WriteLine("Felaktivt svar, försök igen!");
-                        pauseProgram();
-                        break;
+                    int selectedMenuInput = SelectMenuItem();
+                    switch (selectedMenuInput) //Choose from range of options with input "selectedMenuInput"
+                    {
+                        case 1:
+                            AddCustomer();
+                            pauseProgram();
+                            break;
+                        case 2:
+                            ShowCustomers();
+                            RemoveCustomer();
+                            pauseProgram();
+                            break;
+                        case 3:
+                            ShowCustomers();
+                            pauseProgram();
+                            break;
+                        case 4:
+                            ShowCustomers();
+                            ShowBalance();
+                            pauseProgram();
+                            break;
+                        case 5:
+                            ShowCustomers();
+                            AddBalance();
+                            pauseProgram();
+                            break;
+                        case 6:
+                            SubtractBalance();
+                            pauseProgram();
+                            break;
+                        case 7:
+                                if (Directory.Exists(dirname) == false)
+                                {
+                                    Directory.CreateDirectory(dirname);
+                                }
+                                if (File.Exists(dirfile) == false) //If file does not exist
+                            {
+                                var createdFile = File.Create(dirfile); //Create file in selected directory
+                                createdFile.Close();
+                                string json = JsonConvert.SerializeObject(bankCustomers); //Convert list to json format
+                                File.WriteAllText(dirfile, json); //Store list into into .txt file
+                            }
+                            notDone = false;
+                            break;
+                        default:
+                            Console.WriteLine("");
+                            Console.WriteLine("Felaktivt svar, försök igen!");
+                            pauseProgram();
+                            break;
+                    }
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    pauseProgram();
                 }
             }
         }
