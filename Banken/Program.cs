@@ -18,7 +18,7 @@ namespace Banken
         /// <param name="args"></param>
         static void Main(string[] args)
         {
-            string dirname = @"datadir2\";
+            string dirname = @"datadir\";
             string filename = @"data.txt"; //Save file into project root directory
             string dirfile = dirname + filename;
             try
@@ -29,14 +29,21 @@ namespace Banken
                     bankCustomers = JsonConvert.DeserializeObject<List<Customer>>(jsonText); //Deserialize json into c# list format
                 }
             }
-            catch(Exception ex)
+            catch (JsonSerializationException) //If datafile has incorrect json formatting.
             {
-                Console.WriteLine(ex.Message);
                 Console.WriteLine("");
+                Console.WriteLine("Felaktigt format inuti datafilen {0}, kontrollera att det är korrekt och försök igen.", dirfile);
+                pauseProgram();
+            }
+            catch (Exception ex) //If any other type of error occurs
+            {
+                Console.WriteLine("");
+                Console.WriteLine("Ett fel uppstod!");
+                Console.WriteLine(ex.Message);
                 pauseProgram();
             }
             bool notDone = true;
-            while (notDone == true) 
+            while (notDone == true) //Continue until user wishes to exit
             {
                 try
                 {
@@ -71,11 +78,11 @@ namespace Banken
                             pauseProgram();
                             break;
                         case 7:
-                                if (Directory.Exists(dirname) == false)
-                                {
-                                    Directory.CreateDirectory(dirname);
-                                }
-                                if (File.Exists(dirfile) == false) //If file does not exist
+                            if (Directory.Exists(dirname) == false)
+                            {
+                                Directory.CreateDirectory(dirname);
+                            }
+                            if (File.Exists(dirfile) == false) //If file does not exist
                             {
                                 var createdFile = File.Create(dirfile); //Create file in selected directory
                                 createdFile.Close();
@@ -86,13 +93,21 @@ namespace Banken
                             break;
                         default:
                             Console.WriteLine("");
-                            Console.WriteLine("Felaktivt svar, försök igen!");
+                            Console.WriteLine("Felaktigt svar, försök igen!");
                             pauseProgram();
                             break;
                     }
                 }
-                catch(Exception ex)
+                catch (FormatException) //If input recieves anything other than digits and decimal seperator
                 {
+                    Console.WriteLine("");
+                    Console.WriteLine("Felaktigt format användes, använd endast siffror och decimaltecken ','");
+                    pauseProgram();
+                }
+                catch (Exception ex) //If any other type of error occurs
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Ett fel uppstod!");
                     Console.WriteLine(ex.Message);
                     pauseProgram();
                 }
