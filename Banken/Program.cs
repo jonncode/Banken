@@ -11,6 +11,9 @@ namespace Banken
     class Program
     {
         static List<Customer> bankCustomers = new List<Customer>(); // Initialize list to store all customer objects using constructor List<>()
+        static int selectedMenuInput = 0;
+        static int chosenCustomer = 0;
+        static decimal changedBalance = 0;
         /// <summary>
         /// Execute functions based on the choice chosen in SelectMenuItem using switch-case
         /// Loop after case: is done, until user exits by changing bool value of notDone
@@ -47,7 +50,7 @@ namespace Banken
             {
                 try
                 {
-                    int selectedMenuInput = SelectMenuItem();
+                    SelectMenuItem();
                     switch (selectedMenuInput) //Choose from range of options with input "selectedMenuInput"
                     {
                         case 1:
@@ -101,7 +104,13 @@ namespace Banken
                 catch (FormatException) //If input recieves anything other than digits and decimal seperator
                 {
                     Console.WriteLine("");
-                    Console.WriteLine("Felaktigt format användes, använd endast siffror och decimaltecken ','");
+                    Console.WriteLine("Error: Felaktigt format användes, använd endast siffror och decimaltecken ','");
+                    pauseProgram();
+                }
+                catch (OverflowException)
+                {
+                    Console.WriteLine("");
+                    Console.WriteLine("Error: Ett för stort/litet tal användes, minska antalet siffror och försök igen.");
                     pauseProgram();
                 }
                 catch (Exception ex) //If any other type of error occurs
@@ -117,7 +126,7 @@ namespace Banken
         /// Run welcome text and return input choice from user into main
         /// </summary>
         /// <returns></returns>
-        static public int SelectMenuItem()
+        static void SelectMenuItem()
         {
             Console.WriteLine("Välkommen till banken!");
             Console.WriteLine("");
@@ -132,7 +141,7 @@ namespace Banken
             Console.WriteLine("7 : Avsluta programmet");
             Console.WriteLine("");
             Console.Write("Skriv in ditt val: ");
-            return int.Parse(Console.ReadLine());
+            int.TryParse(Console.ReadLine(), out selectedMenuInput);
         }
         /// <summary>
         /// Create new customer instance and fill class attributes name and balance, add first transaction (starting balance) to list.
@@ -142,10 +151,8 @@ namespace Banken
         {
             Customer customer = new Customer(); // Instanciate instance using class Customer with constructor Customer();
             Console.Write("Vad är ditt namn? ");
-            customer.Name = Console.ReadLine();
-            Console.Write("Vad är ditt saldo? ");
-            var balanceInput = decimal.Parse(Console.ReadLine()); // Use datatype decimal for more accurate calculations regarding money
-            customer.Transactions.Add(balanceInput);
+            inputNum();
+            customer.Transactions.Add(changedBalance);
             bankCustomers.Add(customer);
             Console.WriteLine("Lade till ny användare!");
         }
@@ -155,8 +162,8 @@ namespace Banken
         static void RemoveCustomer()
         {
             Console.Write("Vem vill du ta bort? ");
-            int Choice = int.Parse(Console.ReadLine());
-            bankCustomers.Remove(bankCustomers[Choice - 1]);
+            inputInt();
+            bankCustomers.Remove(bankCustomers[chosenCustomer - 1]);
             Console.WriteLine("Tog bort användare!");
         }
         /// <summary>
@@ -177,7 +184,7 @@ namespace Banken
         static void ShowBalance()
         {
             Console.Write("Vem vill du visa? ");
-            int chosenCustomer = int.Parse(Console.ReadLine());
+            inputInt();
             Console.WriteLine(bankCustomers[chosenCustomer - 1].ShowCustomerBalance);
         }
         /// <summary>
@@ -189,10 +196,10 @@ namespace Banken
         {
 
             Console.Write("Vem vill du göra en insättning på? ");
-            int chosenCustomer = int.Parse(Console.ReadLine());
+            inputInt();
             Console.Write("Hur mycket vill du göra en insättning på? ");
-            var addedBalance = decimal.Parse(Console.ReadLine()); // parse string into decimal datatype
-            bankCustomers[chosenCustomer - 1].Transactions.Add(addedBalance);
+            inputNum(); // parse string into decimal datatype
+            bankCustomers[chosenCustomer - 1].Transactions.Add(changedBalance);
         }
         /// <summary>
         /// Use user input to select customer, convert second input from string to decimal.
@@ -202,10 +209,10 @@ namespace Banken
         static void SubtractBalance()
         {
             Console.Write("Vem vill du göra ett uttag på? ");
-            int chosenCustomer = int.Parse(Console.ReadLine());
+            inputInt();
             Console.Write("Hur mycket vill du göra ett uttag på? ");
-            var subtractedBalance = decimal.Parse(Console.ReadLine()); // parse string into decimal datatype
-            bankCustomers[chosenCustomer - 1].Transactions.Add(subtractedBalance * -1);
+            inputNum(); // parse string into decimal datatype
+            bankCustomers[chosenCustomer - 1].Transactions.Add(changedBalance * -1);
         }
         /// <summary>
         /// Simple pause between end of function and continuing notDone while-loop.
@@ -216,6 +223,26 @@ namespace Banken
             Console.WriteLine("Klicka på valfri knapp för att fortsätta");
             Console.ReadKey();
             Console.WriteLine("");
+        }
+        static decimal inputInt()
+        {
+            var userInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+            while (!userInput)
+            {
+                Console.Write("Vad är ditt saldo? ");
+                userInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+            }
+            return chosenCustomer;
+        }
+        static decimal inputNum()
+        {
+            var balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+            while (!balanceInput)
+            {
+                Console.Write("Vad är ditt saldo? ");
+                balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+            }
+            return changedBalance;
         }
 
     }
