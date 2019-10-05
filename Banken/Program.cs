@@ -101,12 +101,6 @@ namespace Banken
                             break;
                     }
                 }
-                catch (FormatException) //If input recieves anything other than digits and decimal seperator
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("Error: Felaktigt format användes, använd endast siffror och decimaltecken ','");
-                    pauseProgram();
-                }
                 catch (OverflowException)
                 {
                     Console.WriteLine("");
@@ -151,6 +145,8 @@ namespace Banken
         {
             Customer customer = new Customer(); // Instanciate instance using class Customer with constructor Customer();
             Console.Write("Vad är ditt namn? ");
+            customer.Name = Console.ReadLine();
+            Console.WriteLine("Ange saldo: ");
             inputNum();
             customer.Transactions.Add(changedBalance);
             bankCustomers.Add(customer);
@@ -226,11 +222,15 @@ namespace Banken
         }
         static decimal inputInt()
         {
-            var userInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+            var userInput = int.TryParse(Console.ReadLine(), out chosenCustomer); // Use datatype decimal for more accurate calculations regarding money
             while (!userInput)
             {
-                Console.Write("Vad är ditt saldo? ");
-                userInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+                if (!userInput)
+                {
+                    Console.WriteLine("Error: Felaktigt format användes, använd endast siffror.");
+                    Console.Write("Försök igen: ");
+                    userInput = int.TryParse(Console.ReadLine(), out chosenCustomer); // Use datatype decimal for more accurate calculations regarding money
+                }
             }
             return chosenCustomer;
         }
@@ -239,8 +239,13 @@ namespace Banken
             var balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
             while (!balanceInput)
             {
-                Console.Write("Vad är ditt saldo? ");
-                balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+                if(!balanceInput)
+                {
+                    Console.WriteLine("Error: Felaktigt format användes, använd endast siffror och decimaltecken ','");
+                    Console.Write("Försök igen: ");
+                    balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
+
+                }
             }
             return changedBalance;
         }
