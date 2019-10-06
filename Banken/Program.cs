@@ -101,12 +101,6 @@ namespace Banken
                             break;
                     }
                 }
-                catch (OverflowException)
-                {
-                    Console.WriteLine("");
-                    Console.WriteLine("Error: Ett för stort/litet tal användes, minska antalet siffror och försök igen.");
-                    pauseProgram();
-                }
                 catch (Exception ex) //If any other type of error occurs
                 {
                     Console.WriteLine("");
@@ -220,20 +214,26 @@ namespace Banken
             Console.ReadKey();
             Console.WriteLine("");
         }
+        /// <summary>
+        /// Uses input to ask for which customer the user would like to select
+        /// </summary>
         static decimal inputInt()
         {
-            var userInput = int.TryParse(Console.ReadLine(), out chosenCustomer); // Use datatype decimal for more accurate calculations regarding money
+            var userInput = int.TryParse(Console.ReadLine(), out chosenCustomer);
             while (!userInput)
             {
                 if (!userInput)
                 {
                     Console.WriteLine("Error: Felaktigt format användes, använd endast siffror.");
                     Console.Write("Försök igen: ");
-                    userInput = int.TryParse(Console.ReadLine(), out chosenCustomer); // Use datatype decimal for more accurate calculations regarding money
+                    userInput = int.TryParse(Console.ReadLine(), out chosenCustomer); 
                 }
             }
             return chosenCustomer;
         }
+         /// <summary>
+        /// Uses input to ask for what the changed in balance should be.
+        /// </summary>
         static decimal inputNum()
         {
             var balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
