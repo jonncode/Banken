@@ -22,7 +22,7 @@ namespace Banken
         static void Main(string[] args)
         {
             string dirname = @"datadir\";
-            string filename = @"data.txt"; //Save file into project root directory
+            string filename = @"data.txt"; //Save file into directory
             string dirfile = dirname + filename;
             try
             {
@@ -81,9 +81,9 @@ namespace Banken
                             pauseProgram();
                             break;
                         case 7:
-                            if (Directory.Exists(dirname) == false)
+                            if (Directory.Exists(dirname) == false) //If directory does not exist
                             {
-                                Directory.CreateDirectory(dirname);
+                                Directory.CreateDirectory(dirname); //Create directory
                             }
                             if (File.Exists(dirfile) == false) //If file does not exist
                             {
@@ -111,7 +111,7 @@ namespace Banken
             }
         }
         /// <summary>
-        /// Run welcome text and return input choice from user into main
+        /// Run welcome text and save input choice into int selectedMenuInput
         /// </summary>
         /// <returns></returns>
         static void SelectMenuItem()
@@ -133,7 +133,7 @@ namespace Banken
         }
         /// <summary>
         /// Create new customer instance and fill class attributes name and balance, add first transaction (starting balance) to list.
-        /// Add instance into list that withholds all customer objects.
+        /// Add instance into list bankCustomer that withholds all customer objects.
         /// </summary>
         static void AddCustomer()
         {
@@ -147,7 +147,7 @@ namespace Banken
             Console.WriteLine("Lade till ny användare!");
         }
         /// <summary>
-        /// Remove customer from list with customers using input. 
+        /// Remove customer from list with customers using input, chosenCustomer - 1 to select index.
         /// </summary>
         static void RemoveCustomer()
         {
@@ -169,7 +169,7 @@ namespace Banken
             }
         }
         /// <summary>
-        /// Use user input to select customer, print said customer's Balance attribute
+        /// Use user input to select customer, print said customer's Balance attribute using method ShowCustomerBalance.
         /// </summary>
         static void ShowBalance()
         {
@@ -178,8 +178,8 @@ namespace Banken
             Console.WriteLine(bankCustomers[chosenCustomer - 1].ShowCustomerBalance);
         }
         /// <summary>
-        /// Use user input to select customer, convert second input from string to decimal.
-        /// Add decimal input into instance's Transaction list attribute.
+        /// Use user input to select customer, convert second input from string to decimal datatype.
+        /// Add decimal datatype input into instance's Transaction list attribute.
         ///
         /// </summary>
         static void AddBalance()
@@ -192,8 +192,8 @@ namespace Banken
             bankCustomers[chosenCustomer - 1].Transactions.Add(changedBalance);
         }
         /// <summary>
-        /// Use user input to select customer, convert second input from string to decimal.
-        /// Multiply second input by -1 to easier store in Transactions list.
+        /// Use user input to select customer, convert second input from string to decimal datatype.
+        /// Multiply second input by -1 to store negative num in Transactions list.
         /// Add decimal input into instance's Transaction list attribute.
         /// </summary>
         static void SubtractBalance()
@@ -219,11 +219,12 @@ namespace Banken
         /// </summary>
         static decimal inputInt()
         {
-            var userInput = int.TryParse(Console.ReadLine(), out chosenCustomer);
-            while (!userInput)
+            var userInput = int.TryParse(Console.ReadLine(), out chosenCustomer); //Return customer into int chosenCustomer for functions.
+            while (!userInput) //While input bool variable has not yet been set.
             {
-                if (!userInput)
+                if (!userInput) //If tryParse fails.
                 {
+                    //Continue asking for input.
                     Console.WriteLine("Error: Felaktigt format användes, använd endast siffror.");
                     Console.Write("Försök igen: ");
                     userInput = int.TryParse(Console.ReadLine(), out chosenCustomer); 
@@ -237,10 +238,11 @@ namespace Banken
         static decimal inputNum()
         {
             var balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
-            while (!balanceInput)
+            while (!balanceInput) //While input bool variable has not yet been set.
             {
-                if(!balanceInput)
+                if(!balanceInput) //If tryParse fails (returns false)
                 {
+                    //Continue asking.
                     Console.WriteLine("Error: Felaktigt format användes, använd endast siffror och decimaltecken ','");
                     Console.Write("Försök igen: ");
                     balanceInput = decimal.TryParse(Console.ReadLine(), out changedBalance); // Use datatype decimal for more accurate calculations regarding money
